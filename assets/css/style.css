@@ -1,0 +1,144 @@
+body{
+    background-image: url("../imgs/home-bg.png");
+    color: #fff;
+    font-family: 'Open Sans', Arial, Helvetica, sans-serif ;
+    
+}
+
+a{
+    color: #fff;
+    font-weight: bold;
+}
+
+button {
+    all: unset;
+    cursor: pointer;
+}
+
+#reward-calendar-modal{
+    display: flex;
+    justify-content: space-between;
+    height: 648px;
+    width: 1248px;
+    position: absolute;
+    left: calc(50% - 1248px/2);
+    top: calc(50% - 640px/2 - 20px);
+    background: #1E2138;
+    border-radius: 24px;
+}
+
+#left-calendar{
+    /* display: flex; */
+    width: 860px;
+    height: 100%;
+}
+
+#right-interactive-area{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 56px 32px 40px;
+    isolation: isolate;
+
+    width: 388px;
+    background-color: #181A2A;
+    border-radius: 0 24px 24px 0;
+}
+
+#exit-button{
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background-image: url("../imgs/svgs/times-stroke.svg");
+    background-repeat: no-repeat;
+    width: 32px;
+    height: 32px;
+    background-position: center;
+    cursor: pointer;
+}
+
+#top-content{
+    display: flex;
+    flex-direction:column;
+    justify-content: flex-start; 
+    gap: 20px;
+    text-align: center;
+}
+
+#text-content{
+    display: flex;
+    flex-direction:column;
+    justify-content: flex-start; 
+    align-items: center;
+    gap: 12px;
+}
+
+#title-wrapper{
+    display: flex;
+    flex-direction:column;
+    justify-content: flex-start;
+    gap: 8px;
+}
+
+#modal-title{
+    font-style: normal;
+    font-weight: 700;
+    font-size: 26px;
+    line-height: 26px;
+    text-align: center;
+}
+
+#reward-date{
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 100%;
+}
+
+#reward-collect-button{
+    width: 288px;
+    height: 48px;
+    background: #E53155;
+    border-radius: 100px;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 100%;
+    text-align: center; 
+    text-transform: uppercase;
+}
+
+#timer-wrapper{
+    display: flex;
+    flex-direction:column;
+    justify-content: flex-start; 
+    gap: 8px;
+}
+
+#timer-text{
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 16px;
+}
+
+#timer{
+    font-weight:700;
+}
+
+#time-zone-indicator{
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 12px;
+}
+
+.seperator {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    width: 324px; 
+}
+
+#more-info{
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 20px;
+    text-align: center;
+}
