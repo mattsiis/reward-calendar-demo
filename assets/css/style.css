@@ -18,7 +18,7 @@ button {
 #reward-calendar-modal{
     display: flex;
     justify-content: space-between;
-    height: 648px;
+    height: 640px;
     width: 1248px;
     position: absolute;
     left: calc(50% - 1248px/2);
@@ -27,22 +27,109 @@ button {
     border-radius: 24px;
 }
 
+
+/* ---------------- */
+/* Left Section */
+/* ---------------- */
+
 #left-calendar{
-    /* display: flex; */
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    justify-content: center;
+    padding-top: 32px;
+    gap: 16px 16px;
     width: 860px;
     height: 100%;
 }
 
+/* Card Item */
+
+#reward-card{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100px;
+    height: 132px;
+    border-radius: 6px;
+    filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+#border{
+    box-sizing: border-box;
+    position: absolute;
+    z-index: 100;
+    width: 100px;
+    height: 132px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+}
+
+#reward-item-wrapper{
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(180deg, #5F6EF0 32.81%, #4A3CE9 100%);
+    position: relative;
+    border-radius: 6px 6px 0 0;
+}
+
+#heart{
+    position: absolute;
+    left: 18px;
+    top: 10px;
+    z-index: 0;
+}
+
+#reward-item{
+    position: absolute;
+    z-index: 1;
+    left: calc(50% - 72px/2);
+    top: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+}
+
+#reward-name{
+    font-size: 13px;
+    line-height: 13px;
+    font-weight: 700;
+}
+
+#day-wrapper{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 32px;
+    background-color: #2A2B3B;
+    border-radius: 0 0 6px 6px;
+}
+
+#day{
+    position: absolute;
+    text-align: center;
+    font-size: 14px;
+    line-height: 100%;
+    font-weight: 700;
+}
+
+/* ---------------- */
+/* Right Section */
+/* ---------------- */
 #right-interactive-area{
     position: relative;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    padding: 56px 32px 40px;
+    padding: 56px 0 40px 0;
+    width: 388px;
     isolation: isolate;
 
-    width: 388px;
     background-color: #181A2A;
     border-radius: 0 24px 24px 0;
 }
@@ -137,6 +224,7 @@ button {
 }
 
 #more-info{
+    width: 324px;
     font-weight: 400;
     font-size: 15px;
     line-height: 20px;
