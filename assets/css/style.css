@@ -196,6 +196,10 @@ button {
     text-transform: uppercase;
 }
 
+#reward-collect-button:hover{
+    background: #ee4264;
+}
+
 #timer-wrapper{
     display: flex;
     flex-direction:column;
@@ -278,7 +282,10 @@ button {
     border-radius: 8px;
     box-shadow: 0px 0px 8px 1px rgba(255, 207, 239, 0.4), 0px 0px 20px 2px rgba(255, 207, 38, 0.65);
     border-radius: 8px;
+    cursor: pointer;
 }
+
+
 
 #border-today{
     box-sizing: border-box;
@@ -296,6 +303,14 @@ button {
     background: linear-gradient(180deg, #5F6EF0 32.81%, #4A3CE9 100%);
     position: relative;
     border-radius: 8px 8px 0 0;
+}
+
+#reward-card-content-wrapper:hover #reward-item-today-wrapper{
+    background: linear-gradient(180deg, #6574f7 32.81%, #5546f7 100%);
+}
+
+#reward-card-content-wrapper:hover #day-wrapper-today{
+    background-color: #2f3041;
 }
 
 #heart-today{
@@ -393,4 +408,21 @@ button {
     left: -2px;
     border-radius: 8px;
     box-shadow: 0px 0px 8px 1px rgba(255, 207, 239, 0.4), 0px 0px 20px 2px rgba(38, 138, 255, 0.8);  
+}
+
+/* Reward Collected Button */
+#reward-collected-button{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 288px;
+    height: 48px;
+    background: #39BB5D;
+    border-radius: 100px;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 100%;
+    text-align: center; 
 }
