@@ -15,9 +15,21 @@ button {
     cursor: pointer;
 }
 
+input {
+    border: none;
+}
+
+input:focus {
+    outline: none;
+}
+  
+  /* .no-outline:focus {
+
+  } */
+
 #reward-calendar-modal{
     display: flex;
-    justify-content: space-between;
+    flex-direction: row;
     height: 640px;
     width: 1248px;
     position: absolute;
@@ -37,16 +49,14 @@ button {
     flex-direction: row;
     flex-wrap: wrap;
     align-content: flex-start;
-    justify-content: center;
-    padding-top: 32px;
+    justify-content: left;
+    padding: 32px;
     gap: 16px 16px;
-    width: 860px;
-    height: 100%;
-}
+ }
 
 /* Card Item */
 
-#reward-card{
+.reward-card{
     position: relative;
     display: flex;
     flex-direction: column;
@@ -64,6 +74,7 @@ button {
     height: 132px;
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 6px;
+    user-select: none;
 }
 
 #reward-item-wrapper{
@@ -122,15 +133,12 @@ button {
 /* ---------------- */
 
 #right-interactive-area{
-    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    padding: 56px 0 40px 0;
-    width: 388px;
+    padding: 56px 32px 40px 32px;
     isolation: isolate;
-
     background-color: #181A2A;
     border-radius: 0 24px 24px 0;
 }
@@ -239,7 +247,7 @@ button {
 /* ------------- */
 /* mask */
 /* ------------- */
-#reward-card-collected{
+.reward-card.collected{
     position: relative;
 }
 
@@ -267,7 +275,7 @@ button {
 /* Reward Card Today Variant */
 /* --------------- */
 
-#reward-card-today{
+.reward-card .today{
     position: relative;
     width: 100px;
     height: 132px;
@@ -374,7 +382,7 @@ button {
 /* ------------- */
 /* mask */
 /* ------------- */
-#reward-card-collected-today{
+.reward-card .collected-today{
     position: relative;
     width: 100px;
     
@@ -425,4 +433,24 @@ button {
     font-size: 18px;
     line-height: 100%;
     text-align: center; 
+}
+
+/* Gold Input Box when edit the gold */
+.gold-input {
+    width: 40px;
+    background-color: #414ec9;
+    text-align: center;
+    color: #fff;
+    border-radius: 2px;
+    border: 1px solid #263aac;
+}
+
+.gold-input::placeholder{
+    color: #fff;
+    opacity: 0.6;
+}
+
+.gold-input:focus{
+    border: 1px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3)
 }

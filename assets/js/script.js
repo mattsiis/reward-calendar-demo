@@ -1,32 +1,49 @@
-const GOLD = [2,3,2,3,5,3,10, 2,5,5,2,3,3,20, 2,3,2,3,2,3,30, 2,5,5,3,2,3,50];
-let PREVIOUSLYCOLLECTED = 0;
 let TODAYCOLLECTED = false;
 
-let DAY = 0;
+let GOLD, PREVIOUSLYCOLLECTED, TOTALDAY;
+
+init();
 rewardCardHandler();
 
-let cardEl = document.querySelector("#reward-card-content-wrapper");
-let buttonEl = document.querySelector("#reward-collect-button");
+function init() {
+    // ---Store Data to local storage---
+    // If there is no data store in the local storage, set local storage to the raw data
+    if(!localStorage.getItem("gold") || !localStorage.getItem("previousCollected") || !localStorage.getItem('totalDay')){
+        let TOTALDAYRAW = 28;
+        const GOLDRAW = [1,1,1,1,1,1,1, 1,1,1,1,1,1,1, 1,1,1,1,1,1,1, 1,1,1,1,1,1,1];
+        let PREVIOUSLYCOLLECTEDRAW = 0;
+        localStorage.setItem("gold", JSON.stringify(GOLDRAW));
+        localStorage.setItem("previousCollected", JSON.stringify(PREVIOUSLYCOLLECTEDRAW));
+        localStorage.setItem("totalDay", JSON.stringify(TOTALDAYRAW))
+    }
+    // Fetch data from local storage
+    GOLD = JSON.parse(localStorage.getItem("gold"));
+    PREVIOUSLYCOLLECTED = JSON.parse(localStorage.getItem("previousCollected"));
+    TOTALDAY = JSON.parse(localStorage.getItem("totalDay"));
+}
 
 function rewardCardHandler() {
-    for (let i=0; i<28; i++) {
-        DAY = i + 1;
+    
+    let dayCounter = 0;
+    for (let i=0; i<TOTALDAY; i++) {
+        dayCounter = i + 1;
         let tier = tierHandler(GOLD[i]);
-        if(DAY <= PREVIOUSLYCOLLECTED){
-            document.getElementById("left-calendar").appendChild(previouslyCollectedCard());
-        } else if (DAY == PREVIOUSLYCOLLECTED + 1) {
+        if(dayCounter <= PREVIOUSLYCOLLECTED){
+            document.getElementById("left-calendar").appendChild(previouslyCollectedCard(dayCounter));
+        } else if (dayCounter == PREVIOUSLYCOLLECTED + 1) {
             if (TODAYCOLLECTED) {
-                document.getElementById("left-calendar").appendChild(previouslyCollectedCardToday(DAY));
+                document.getElementById("left-calendar").appendChild(previouslyCollectedCardToday(dayCounter));
                 document.getElementById("reward-card-content-wrapper").setAttribute("id", "reward-card-content-wrapper-today");
                 updateButton();
             } else {
-                document.getElementById("left-calendar").appendChild(defaultCardToday(DAY, GOLD[i], tier));
+                document.getElementById("left-calendar").appendChild(defaultCardToday(dayCounter, GOLD[i], tier));
             }
         } else {
-            document.getElementById("left-calendar").appendChild(defaultCard(DAY, GOLD[i], tier));
+            document.getElementById("left-calendar").appendChild(defaultCard(dayCounter, GOLD[i], tier));
         }
     }
 }
+
 
 // Card clicked to collect reward
 function cardCollectRewardHandler() {
@@ -43,6 +60,36 @@ function buttonCollectRewardHandler() {
         updateButton();
     }
 }
+
+// When exit button is clicked, edit the parameter
+function editGoldHandler(){
+    // re-render the cards
+    document.querySelectorAll(".reward-card").forEach((el, index) => {
+        el.replaceWith(defaultCard(index+1, GOLD[index], tierHandler(GOLD[index])));
+    });
+    document.querySelectorAll("#border").forEach((el) => {
+        el.remove();
+    } )
+    document.querySelectorAll("#reward-name").forEach((el, index) => {
+        el.replaceWith(createInputBox(index));
+    });
+
+    document.querySelectorAll(".gold-input").forEach((el) => {
+        el.addEventListener("blur", goldInputTextHandler);
+    })    
+}
+
+// Handle the off-focus event. When the inputbox is unfocused, update the local storage.
+function goldInputTextHandler(e) {
+    if(e.target.value){
+        let value = parseInt(e.target.value);
+        console.log(value)
+        let index = e.target.attributes.data.value;
+        updateGold(index, value);
+        editGoldHandler();
+    }
+}
+
 
 // Determin the tier of the reward.
 // There are 6 tiers in the current reward. By dividing the total gold by 5, the result can be fall into different categories.
@@ -63,9 +110,13 @@ function tierHandler(gold) {
     }
 }
 
+// -------------------------------------
+
+// ---- Element Creator-----
+// Create Default Card Element
 function defaultCard(day, gold, tier) {
     let card = document.createElement('div');
-    card.setAttribute('id', "reward-card");
+    card.setAttribute('class', "reward-card");
     card.innerHTML = `    
         <div id="border"></div>
         <div id= "reward-item-wrapper">
@@ -82,11 +133,12 @@ function defaultCard(day, gold, tier) {
     return card;
 }
 
-function previouslyCollectedCard() {
+// Add overlay and collected tag to the Default Card
+function previouslyCollectedCard(day) {
     let card = document.createElement('div');
-    card.setAttribute("id", "reward-card-collected");
+    card.setAttribute("class", "reward-card collected");
     // import current day default card
-    card.innerHTML += defaultCard(DAY, GOLD[DAY-1], tierHandler(GOLD[DAY-1])).innerHTML;
+    card.innerHTML += defaultCard(day, GOLD[day-1], tierHandler(GOLD[day-1])).innerHTML;
     // add mask and collected tag
     card.innerHTML += `
         <div id="mask">
@@ -96,9 +148,10 @@ function previouslyCollectedCard() {
     return card;
 }
 
+// Create Today Card Element
 function defaultCardToday(day, gold, tier) {
     let card = document.createElement('div');
-    card.setAttribute('id', "reward-card-today");
+    card.setAttribute('class', "reward-card today");
     card.innerHTML = `
         <div id="reward-card-content-wrapper">
             <div id="border-today"></div>
@@ -118,9 +171,10 @@ function defaultCardToday(day, gold, tier) {
     return card;
 }
 
+// Add overlay and collected tag to the Default Card
 function previouslyCollectedCardToday(today) {
     let card = document.createElement('div');
-    card.setAttribute("id", "reward-card-collected-today");
+    card.setAttribute("class", "reward-card collected-today");
     // import current day default card
     card.innerHTML += defaultCardToday(today, GOLD[today-1], tierHandler(GOLD[today-1])).innerHTML;
     // add mask and collected tag
@@ -132,15 +186,7 @@ function previouslyCollectedCardToday(today) {
     return card;
 }
 
-function updateCardCollected() {
-    document.querySelector("#reward-card-today").replaceWith(previouslyCollectedCardToday(PREVIOUSLYCOLLECTED+1));
-    document.getElementById("reward-card-content-wrapper").setAttribute("id", "reward-card-content-wrapper-today");
-}
-
-function updateButton() {
-    document.querySelector("#reward-collect-button").replaceWith(rewardCollectedButton())
-}
-
+// Create Reward Collected Button
 function rewardCollectedButton(){
     let button = document.createElement('div');
     button.setAttribute("id", "reward-collected-button");
@@ -151,7 +197,50 @@ function rewardCollectedButton(){
     return button;
 }
 
-if(cardEl){
-    cardEl.addEventListener("click", cardCollectRewardHandler);
+// Create Input Box Element
+function createInputBox(index) {
+    let goldInputBox = document.createElement('input');
+    setAttributes(goldInputBox, {'type': 'text', "class": "gold-input", "data": index, "placeholder": GOLD[index] });
+    // goldInputBox.innerHTML = `
+    //     <input type="text" class="gold-input" name="new-gold" data=` + index + ` placeholder= ` + GOLD[index] + `></input>
+    // `
+    return goldInputBox;
 }
+
+// -------------------------------------------------
+
+// ----Update Behaviour----
+// Update today's card when reward is collected
+function updateCardCollected() {
+    document.querySelector(".reward-card.today").replaceWith(previouslyCollectedCardToday(PREVIOUSLYCOLLECTED+1));
+    document.getElementById("reward-card-content-wrapper").setAttribute("id", "reward-card-content-wrapper-today");
+}
+
+// Update reward Collected Button when reward is collected
+function updateButton() {
+    document.querySelector("#reward-collect-button").replaceWith(rewardCollectedButton())
+}
+
+// update gold amount in local storage
+function updateGold(i, amount) {
+    GOLD[i] = amount;
+    localStorage.setItem("gold", JSON.stringify(GOLD));
+}
+
+// ----Utilities----
+// util.setAttributes, Used for setting multiple attributes
+function setAttributes(el, attrs) {
+    for(let key in attrs) {
+        el.setAttribute(key, attrs[key]);
+    }
+}
+
+
+// ----Listener----
+const cardEl = document.querySelector("#reward-card-content-wrapper");
+const buttonEl = document.querySelector("#reward-collect-button");
+const exitEl = document.querySelector("#exit-button");
+
+cardEl.addEventListener("click", cardCollectRewardHandler);
 buttonEl.addEventListener("click", buttonCollectRewardHandler);
+exitEl.addEventListener("click", editGoldHandler);
