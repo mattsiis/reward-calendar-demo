@@ -3,43 +3,27 @@
     <head>
         <meta charset="UTF-8" />
         <title>Reward Calendar Demo</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="./assets/css/style.css" />
     </head>
 
     <body>
         <div id="reward-calendar-modal">
             
-            <div id="left-calendar"></div>
+            <div id="left-calendar">
+                <div id="left-title-wrapper">
+                    <div class="modal-title">Daily Calendar</div>
+                    <div id="more-info">Claim as many rewards as you can until the month ends! <a href="#" id="learn-more">Learn More</a></div>
+                </div>
+                <div id="card-list"></div>
+            </div>
 
             <div id="right-interactive-area">
                 <div id="exit-button"></div>
-                <div id="top-content">
-                    <div id="chibi-img">
-                        <img src="./assets/imgs/chibi-graphic.png" alt="chibi-graphic">
-                    </div>
-                    <div id="text-content">
-                        <div id="title-wrapper">
-                            <div id="modal-title">Reward Calendar</div>
-                            <div id="reward-date">Nov.1 - Nov.30</div>
-                        </div>
-                        
-                        <button id="reward-collect-button">
-                            <span class="button-text">Claim Reward</span>
-                        </button>
-
-                        <div id="timer-wrapper">
-                            <div id="timer-text">You have <span id="timer">21:48:56</span> left to claim the reward.</div>
-                            <div id="time-zone-indicator">Days reset at 10pm UTC time</div>
-                        </div>
-                    </div>
-                    <div class="seperator" ></div>
-                </div>
-                <div id="more-info">Claim as many rewards as you can until the month ends! <a href="#">Learn More</a></div>
             </div>
         </div>
-
-        
-
         <script src="./assets/js/script.js"></script>
     </body>
 </html>
