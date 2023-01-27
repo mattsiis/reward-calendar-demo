@@ -341,7 +341,7 @@ function defaultCardToday(day, gold, tier) {
 // Add overlay and collected tag to the Default Card
 function previouslyCollectedCardToday(today) {
     let codeBtn = ``;
-    if (tierHandler(GOLD[day-1]) === 7) {
+    if (tierHandler(GOLD[today-1]) === 7) {
         codeBtn = `<button class="button reward-code-today claim">Check Reward</button>`
     }
 
