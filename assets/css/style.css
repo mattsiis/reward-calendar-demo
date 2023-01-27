@@ -1,8 +1,7 @@
 body{
     background-image: url("../imgs/home-bg.png");
     color: #fff;
-    font-family: "Open Sans", Arial, Helvetica, sans-serif ;
-    letter-spacing: 0.025em;
+    font-family: "Open Sans";
 }
 
 a{
