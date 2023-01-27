@@ -2,7 +2,7 @@ body{
     background-image: url("../imgs/home-bg.png");
     color: #fff;
     font-family: "Open Sans", Arial, Helvetica, sans-serif ;
-    
+    letter-spacing: 0.025em;
 }
 
 a{
@@ -15,9 +15,10 @@ button {
     cursor: pointer;
 }
 
-input {
+select, input {
     border: none;
     color: #fff;
+    border-style: solid;
 }
 
 input:focus {
@@ -125,6 +126,11 @@ ul {
 }
 
 #reward-name{
+    position: absolute;
+    bottom: 8px;
+    width: 100%;
+    left: 0px;
+    text-align: center;
     font-size: 13px;
     line-height: 13px;
     font-weight: 700;
@@ -369,12 +375,22 @@ ul {
     gap: 1px;
 }
 
+#reward-img{
+    width: 72px;
+    height: 72px;
+}
+
 #reward-img-today{
     width: 76px;
     height: 76px;
 }
 
 #reward-name-today{
+    position: absolute;
+    width: 100%;
+    left: 0px;
+    bottom: 8px;
+    text-align: center;
     font-size: 14px;
     line-height: 14px;
     font-weight: 700;
@@ -455,6 +471,52 @@ ul {
     text-align: center; 
 }
 
+/* Reward Code Button */
+.button{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100px;
+    font-weight: 700;
+    line-height: 100%;
+    text-align: center; 
+}
+
+.button.reward-code-prev{
+    width: 84px;
+    height: 20px;
+    position: absolute;
+    bottom: 6px;
+    left: 8px;
+    font-size: 10px;
+}
+
+.button.reward-code-today{
+    width: 90px;
+    height: 22px;
+    position: absolute;
+    bottom: 7px;
+    left: 7px;
+    font-size: 11px;
+}
+
+
+.button.claim{
+    background-color: #E53155;
+}
+
+.button.claimed{
+    background-color: #39BB5D;
+    cursor: default;
+}
+
+.icon.checkmark {
+    width: 10px;
+    height: 10px;
+    margin-right: 4px;
+}
+
 /* Gold Input Box when edit the gold */
 .gold-input {
     width: 40px;
@@ -473,6 +535,26 @@ ul {
 .gold-input:focus{
     border: 1px solid white;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3)
+}
+
+.reward-setting-wrapper{
+    position: absolute;
+    bottom: 4px;
+    width: 100%;
+    left: 0px;
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.reward-code-checkbox{
+    margin: 0px;
+    border-radius: 1px;
+    width: 16px;
+    height: 16px;
 }
 
 /* -----Setting Panel----- */

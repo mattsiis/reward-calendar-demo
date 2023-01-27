@@ -74,6 +74,10 @@ function editGoldHandler(){
         })
     })
 
+    document.querySelectorAll(".reward-code-checkbox").forEach((el) => {
+        el.addEventListener("change", checkMarkSelectedHandler)
+    })
+
     // create right confirmation section
     document.querySelector("#exit-button").setAttribute("hidden", "hidden");
     document.querySelector("#learn-more").setAttribute("hidden", "hidden");
@@ -98,6 +102,19 @@ function goldInputValueHandler(e) {
     }
 }
 
+function checkMarkSelectedHandler(e) {
+    let index = this.attributes.data.value;
+    let isChecked = this.checked;
+    let goldTemp = JSON.parse(localStorage.getItem("gold"));
+
+    if(isChecked) {
+        GOLD[index] = "reward Code";
+    } else {
+        GOLD[index] = goldTemp[index];    
+    }
+    editGoldHandler();
+}
+
 // update gold amount in local storage
 function uploadGoldHandler() {
     localStorage.setItem("gold", JSON.stringify(GOLD));
@@ -113,6 +130,7 @@ function tierHandler(gold) {
     else if(gold > GOLDTIERMAX[2] && gold <= GOLDTIERMAX[3]) {return 4;}
     else if(gold > GOLDTIERMAX[3] && gold <= GOLDTIERMAX[4]) {return 5;}
     else if(gold > GOLDTIERMAX[4]) {return 6;}
+    else {return 7;}
 }
 
 // Edit the parameter store in the local storage, then re-render the modal
@@ -132,15 +150,18 @@ function editParamHandler () {
     })
 }
 
-
+// Setting logic
 function settingFromHandler (e) {
     e.preventDefault();
+    // get general inputs
     let monthInput = document.getElementById("set-month").value;
     let totaldayInput = document.getElementById("reward-counts").value;
     let prevCollectDaysInput = parseInt(document.getElementById("prev-collected-days").value);
 
+    // If those input has value, change it to int
     if (totaldayInput) totaldayInput = parseInt(totaldayInput);
     if (prevCollectDaysInput) prevCollectDaysInput = parseInt(prevCollectDaysInput)
+    // Check previous input is valid
     if (totaldayInput) {
         if (prevCollectDaysInput >= totaldayInput) {
             prevCollectDaysInput = totaldayInput -1;
@@ -173,6 +194,32 @@ function settingFromHandler (e) {
     window.location.reload();
 }
 
+// handle previously claimed reward code
+function claimedPrevHandler() {
+    let claimedBtn = document.createElement("button");
+
+    setAttributes(claimedBtn, {"class": "button reward-code-prev claimed", "disabled": "disabled"})
+    claimedBtn.innerHTML = `
+        <img class="icon checkmark" src="./assets/imgs/svgs/check.svg" />
+        <span>REDEEMED</span>
+    `
+    
+    this.replaceWith(claimedBtn);
+}
+
+// handle Today claimed reward code
+function claimedTodayHandler() {
+    let claimedBtn = document.createElement("button");
+
+    setAttributes(claimedBtn, {"class": "button reward-code-today claimed", "disabled": "disabled"})
+    claimedBtn.innerHTML = `
+        <img class="icon checkmark" src="./assets/imgs/svgs/check.svg" />
+        <span>REDEEMED</span>
+    `
+    this.replaceWith(claimedBtn);
+}
+
+
 function reloadPageHandler() {
     window.location.reload();
 }
@@ -199,6 +246,13 @@ function createRewardCardList() {
             document.getElementById("card-list").appendChild(defaultCard(i+1, GOLD[i], tier));
         }
     }
+
+    // Add event listener to see if there are reward code available to collect
+    if(document.getElementsByClassName("reward-code-prev")){
+        document.querySelectorAll(".reward-code-prev").forEach((el) => {
+            el.addEventListener("click", claimedPrevHandler)
+        })
+    }
 }
 
 // Create Right Section
@@ -210,6 +264,13 @@ function createRightSection() {
 // Create Default Card Element
 function defaultCard(day, gold, tier) {
     let card = document.createElement('div');
+    let rewardName = ``
+    if (tier === 7) {
+        rewardName = `<div id="reward-name"><span>Reward Code</span></div>`;
+    } else {
+        rewardName = `<div id="reward-name"><span>` + gold + `</span> Gold</div>`
+    }
+    
     card.setAttribute('class', "reward-card");
     card.innerHTML = `    
         <div id="border"></div>
@@ -217,8 +278,8 @@ function defaultCard(day, gold, tier) {
             <img id="heart" src="./assets/imgs/svgs/heart.svg" />
             <div id="reward-item">
                 <img id="reward-img" src="./assets/imgs/reward-item-tier-` + tier + `.png" />
-                <div id="reward-name"><span>` + gold + `</span> Gold</div> 
             </div>
+                ` + rewardName + `
         </div>
         <div id="day-wrapper">
             <div id="day">Day <span>` + day + `</span></div>
@@ -229,6 +290,10 @@ function defaultCard(day, gold, tier) {
 
 // Add overlay and collected tag to the Default Card
 function previouslyCollectedCard(day) {
+    let codeBtn = ``;
+    if (tierHandler(GOLD[day-1]) === 7) {
+        codeBtn = `<button class="button reward-code-prev claim" data="` + (day-1) + `" id="reward-prev-`+ (day-1) +`">Check Reward</button>`
+    }
     let card = document.createElement('div');
     card.setAttribute("class", "reward-card collected");
     // import current day default card
@@ -237,6 +302,7 @@ function previouslyCollectedCard(day) {
     card.innerHTML += `
         <div id="mask">
             <img id="collected-tag" src="./assets/imgs/svgs/checkmark.svg" />
+            ` + codeBtn + `
         </div>
     `;
     return card;
@@ -244,6 +310,13 @@ function previouslyCollectedCard(day) {
 
 // Create Today Card Element
 function defaultCardToday(day, gold, tier) {
+    let rewardName = ``
+    if (tier === 7) {
+        rewardName = `<div id="reward-name-today"><span>Reward Code</span></div>`;
+    } else {
+        rewardName = `<div id="reward-name-today"><span>` + gold + `</span> Gold</div>`
+    }
+
     let card = document.createElement('div');
     card.setAttribute('class', "reward-card today");
     card.innerHTML = `
@@ -254,8 +327,8 @@ function defaultCardToday(day, gold, tier) {
                 <img id="heart-today" src="./assets/imgs/svgs/heart.svg" />
                 <div id="reward-item-today">
                     <img id="reward-img-today" src="./assets/imgs/reward-item-tier-` + tier + `.png" />
-                    <div id="reward-name-today"><span>` + gold + `</span> Gold</div> 
                 </div>
+                ` + rewardName + `
             </div>
             <div id="day-wrapper-today">
                 <div id="day-today">Day <span>` + day + `</span></div>
@@ -267,6 +340,11 @@ function defaultCardToday(day, gold, tier) {
 
 // Add overlay and collected tag to the Default Card
 function previouslyCollectedCardToday(today) {
+    let codeBtn = ``;
+    if (tierHandler(GOLD[day-1]) === 7) {
+        codeBtn = `<button class="button reward-code-today claim">Check Reward</button>`
+    }
+
     let card = document.createElement('div');
     card.setAttribute("class", "reward-card collected-today");
     // import current day default card
@@ -275,6 +353,7 @@ function previouslyCollectedCardToday(today) {
     card.innerHTML += `
         <div id="mask-today">
             <img id="collected-tag-today" src="./assets/imgs/svgs/checkmark.svg" />
+            `+ codeBtn +`
         </div>
     `;
     return card;
@@ -293,9 +372,24 @@ function rewardCollectedButton(){
 
 // Create Input Box Element
 function createInputBox(index) {
-    let goldInputBox = document.createElement('input');
-    setAttributes(goldInputBox, {'type': 'text', "class": "gold-input", "data": index, "placeholder": GOLD[index] });
-    return goldInputBox;
+    let rewardSettingWrapper = document.createElement('div');
+    rewardSettingWrapper.setAttribute("class", "reward-setting-wrapper");
+    if(tierHandler(GOLD[index]) === 7){
+        rewardSettingWrapper.innerHTML = `
+        <input type="text" class="gold-input" data="` + index + `" placeholder="Code">
+        <input type="checkbox" class="reward-code-checkbox" data="` + index + `" checked>
+        `
+    } else {
+        rewardSettingWrapper.innerHTML = `
+        <input type="text" class="gold-input" data="` + index + `" placeholder="` + GOLD[index] +`">
+        <input type="checkbox" class="reward-code-checkbox" data="` + index + `">
+        `
+    }
+      
+      // let goldInputBox = document.createElement('input');
+    // setAttributes(goldInputBox, {'type': 'text', "class": "gold-input", "data": index, "placeholder": GOLD[index] });
+    // return goldInputBox;
+    return rewardSettingWrapper;
 }
 
 // Create right Calendar Info section
@@ -411,6 +505,11 @@ function tierOption (tiers) {
 function updateCardCollected() {
     document.querySelector(".reward-card.today").replaceWith(previouslyCollectedCardToday(PREVIOUSLYCOLLECTED+1));
     document.getElementById("reward-card-content-wrapper").setAttribute("id", "reward-card-content-wrapper-today");
+
+    let rewardBtn = document.querySelector(".reward-code-today.claim")
+    if(rewardBtn){
+        rewardBtn.addEventListener("click", claimedTodayHandler)
+    }
 }
 
 // Update reward Collected Button when reward is collected
