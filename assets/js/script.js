@@ -69,20 +69,24 @@ function editGoldHandler(){
     document.querySelectorAll(".gold-input").forEach((el) => {
         el.addEventListener("keypress", function(e) {
             if(e.key === "Enter") {
-                goldInputValueHandler(e)
+                el.blur();
             }
         })
+        el.addEventListener("blur", goldInputValueHandler);
     })
 
     document.querySelectorAll(".reward-code-checkbox").forEach((el) => {
         el.addEventListener("change", checkMarkSelectedHandler)
     })
 
+    // recalculate the stats
+    let stats = calcStats();
+
     // create right confirmation section
     document.querySelector("#exit-button").setAttribute("hidden", "hidden");
     document.querySelector("#learn-more").setAttribute("hidden", "hidden");
     let rightSection = document.querySelector("#top-content");
-    if (rightSection) rightSection.replaceWith(editGoldConfirmationElement());
+    if (rightSection) rightSection.replaceWith(editGoldConfirmationElement(stats.totalGold, stats.numCode));
     
     let cancelBtn = document.querySelector("#cancel-setting");
     cancelBtn.addEventListener("click", reloadPageHandler)
@@ -99,8 +103,11 @@ function goldInputValueHandler(e) {
         GOLD[index] = value;
         // updateGold(index, value);
         editGoldHandler();
+        updateStates()
     }
 }
+
+
 
 function checkMarkSelectedHandler(e) {
     let index = this.attributes.data.value;
@@ -113,6 +120,7 @@ function checkMarkSelectedHandler(e) {
         GOLD[index] = goldTemp[index];    
     }
     editGoldHandler();
+    updateStates();
 }
 
 // update gold amount in local storage
@@ -135,6 +143,11 @@ function tierHandler(gold) {
 
 // Edit the parameter store in the local storage, then re-render the modal
 function editParamHandler () {
+    // re-render the cards
+    document.querySelectorAll(".reward-card").forEach((el, index) => {
+        el.replaceWith(defaultCard(index+1, GOLD[index], tierHandler(GOLD[index])));
+    });
+
     document.querySelector("#exit-button").setAttribute("hidden", "hidden");
     document.querySelector("#learn-more").setAttribute("hidden", "hidden");
     document.querySelector("#top-content").replaceWith(editParamElement());
@@ -260,7 +273,69 @@ function createRightSection() {
     document.getElementById("right-interactive-area").appendChild(calendarInfoElement());
 }
 
+// TODO
+function createDateControl() {
+    document.querySelector("body").appendChild(dateControlElement());
+}
+
+// TODO
+function nextDayHandler() {
+    if ( PREVIOUSLYCOLLECTED < TOTALDAY - 1 && document.querySelector("#reward-collect-button")) {
+        PREVIOUSLYCOLLECTED ++;
+        reloadCardList()
+        createRewardCardList();
+    }
+}
+
+function prevDayHandler() {
+    if ( PREVIOUSLYCOLLECTED > 0 && document.querySelector("#reward-collect-button")) {
+        PREVIOUSLYCOLLECTED --;
+        reloadCardList()
+        createRewardCardList();
+    }
+}
+
+
+
+function reloadCardList() {
+    let newCardList = document.createElement("div");
+    newCardList.setAttribute("id", "card-list")
+    document.getElementById("card-list").replaceWith(newCardList);
+}
+
+function resetDefaultHandler() {
+    reset();
+    reloadPageHandler();
+}
+
+function closeDateControl() {
+    document.querySelector(".date-panel").remove();
+}
+
 // -----Elements---------
+
+// Create Date Control Panel
+function dateControlElement() {
+    let panel = document.createElement('div');
+    setAttributes(panel, {"class": "date-panel"})
+    panel.innerHTML = `
+        <div class="date-control button-wrapper">
+            <button class="button date-control active" onClick="prevDayHandler()"> Previous Day </button>
+            <button class="button date-control active" onClick="nextDayHandler()"> Next Day </button>
+        </div>
+        <div class="date-control button-wrapper">
+            <button class="button date-control active" onClick="reloadPageHandler()"> Refresh Page </button>
+        </div>
+        <div class="date-control button-wrapper">
+            <button class="button date-control active" ondblclick="resetDefaultHandler()"> Reset (2click)</button>
+        </div>
+        <div class="date-control button-wrapper">
+            <button class="button date-control active" onClick="closeDateControl()"> Close </button>
+        </div>
+    `
+    return panel;
+}
+
 // Create Default Card Element
 function defaultCard(day, gold, tier) {
     let card = document.createElement('div');
@@ -460,11 +535,25 @@ function editParamElement() {
 }
 
 // Create Edit Gold Cormation element
-function editGoldConfirmationElement(){
+function editGoldConfirmationElement(total, numberCode){
     let settingPanel = document.createElement('div');
     settingPanel.setAttribute("class", "setting-panel gold");
     settingPanel.innerHTML = `
-        <p class="modal-title"> Confirm the Gold Setting? </p>
+        <div class="setting-container">
+            <div class="setting-title">Statistics</div>
+            <div class="setting-wrapper">
+                <div class="setting-item">
+                    <label class="setting-label">Total Gold In Calendar</label>
+                    <span class="stats" id="total-gold">`+ total +`<span>
+                </div>
+                <div class="setting-item">
+                    <label class="setting-label">Number Of Reward Code</label>
+                    <span class="stats" id="num-code">`+ numberCode +`<span>
+                </div>
+            </div>
+        </div>
+
+        <span class="setting-title">Confirm the Gold Setting?</span>
         <div class="button-wrapper gold-setting">
             <button class="setting-button confirm" id="confirm-gold">Confirm</button> 
             <button class="setting-button cancel" id="cancel-setting">Cancel</button>
@@ -526,6 +615,32 @@ function updateMinInput(e){
         targetEl.placeholder = parseInt(e.target.value) + 1;
         targetEl.classList.add('edited');
     }
+}
+
+// update the statistics
+function updateStates() {
+    let stats = calcStats()
+    document.getElementById("total-gold").textContent= stats.totalGold;
+    document.getElementById("num-code").textContent= stats.numCode;
+}
+
+// ----Tools for this project --------------
+
+// calculate Total Gold
+function calcStats() {
+    let totalGold = 0;
+    let numCode = 0;
+    for (let i = 0; i < TOTALDAY; i++) {
+        if (!isNaN(GOLD[i])){
+            totalGold += GOLD[i];
+        } else {
+            numCode ++;
+        }
+    }
+    return {
+        "totalGold": totalGold,
+        "numCode": numCode
+    };
 }
 
 

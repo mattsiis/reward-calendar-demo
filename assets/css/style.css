@@ -561,7 +561,7 @@ ul {
 .setting-panel.gold{
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: left;
     gap: 12px;
     width: 324px;
 }
@@ -569,7 +569,7 @@ ul {
 .button-wrapper.gold-setting {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: left;
 }
 
 .setting-form {
@@ -682,4 +682,61 @@ ul {
     color: #ff9900;
     opacity: 1;
     font-weight: 700;
+}
+
+#total-gold{
+    font-weight: 700;
+    color:#39BB5D
+}
+
+/* Date-Control */
+#date-control {
+    display: flex;
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    bottom: 0%;
+    left: 0%;
+
+}
+
+#date-control:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.date-panel{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 32px;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 150px;
+    height: 100%;
+    background-color: #181A2A;
+}
+
+.date-control.button-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
+
+.button.date-control{
+    width: 120px;
+    height: 32px;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.button.date-control.active{
+    background-color: #E53155;
+}
+
+.button.date-control.active:hover{
+    background-color: #ee4264;
 }
